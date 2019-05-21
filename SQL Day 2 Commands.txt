@@ -1,0 +1,18 @@
+select sum(QTY_SOLD) as TotalSales, 
+sum (QTY_Purchased) as TotalStockPurchased, 
+min(QTY_sold) as AmountSoldOfLeastPopularItem, 
+count(*) as NumberOfProductsBeingSold 
+from supermarket;
+
+
+select product_name, 
+QTY_Purchased - QTY_Sold as Stock 
+from supermarket 
+where (Qty_Purchased - Qty_Sold) = (Select Min(Qty_Purchased - Qty_sold) from supermarket);
+
+select product_name, 
+Price_Sold - Price_Purchased as "Markup Per Sale" 
+from supermarket 
+where (Price_Sold - Price_Purchased) = (Select Max(Price_Sold - Price_Purchased) from supermarket);
+
+

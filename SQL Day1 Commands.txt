@@ -1,0 +1,94 @@
+create table School(RegNo Number(5), Name char(30), Marks number(3));
+
+insert into school values(00001,'Daniel',82);
+insert into school values(00002, 'Tom', 89);
+insert into school values(00003, 'David', 72);
+insert into school values(00004, 'Emily', 77);
+insert into school values(00005, 'Bobby', 67);
+insert into school values(00006, 'Freddy', 80);
+insert into school values(00007, 'John', 81);
+insert into school values(00008, 'Gloria', 82);
+insert into school values(00009, 'Rosie', 84);
+insert into school values(00010, 'Jackson', 93);
+select * from school;
+
+-------
+
+create table Shop(ProductNo Number(5), Price Number(10), Quantity number(5));
+insert into shop values(00001, 12.00, 49);
+insert into shop values(00002, 3.25, 73);
+insert into shop values(00003, 0.50, 294);
+select * from shop;
+
+select name,marks*100/150 from school;
+select name,marks,marks*100/150 from school;
+
+select productno, price, quantity,  price*quantity as amount, price * 15 /100 as VAT_Per_Item, (price * quantity) * 15 / 100 as Total_VAT,
+ (price * quantity) + ((price * quantity) * 15 / 100) as Bill from shop;
+
+--------
+
+create table supermarket(Product_Name char(20),Price_Purchased Number(5,2),Price_Sold Number(5,2),QTY_Purchased Number(4),QTY_Sold Number(4));
+
+insert into supermarket values('Apples', 0.25, 0.50, 150, 127);
+insert into supermarket values('Pearss', 0.20, 0.45, 100, 74);
+
+select * from supermarket;
+
+PRODUCT_NAME         PRICE_PURCHASED PRICE_SOLD QTY_PURCHASED   QTY_SOLD
+-------------------- --------------- ---------- ------------- ----------
+Apples                           .25         .5           150        127
+Pearss                            .2        .45           100         74
+
+select product_name, price_sold - price_purchased as Markup, (price_sold - price_purchased) * QTY_sold as Profit from supermarket;
+
+PRODUCT_NAME             MARKUP     PROFIT
+-------------------- ---------- ----------
+Apples                      .25      31.75
+Pearss                      .25       18.5
+
+insert into supermarket values('Oranges',0.4,0.65,125,91);
+insert into supermarket values('Melons',0.5,0.99,80,58);
+insert into supermarket values('Bananas',0.35,0.50,100,82);
+
+select * from supermarket;
+select product_name, price_sold - price_purchased as Markup, (price_sold - price_purchased) * QTY_sold as Profit from supermarket;
+
+select product_name as High_Profit_Item, (price_sold - price_purchased) * QTY_sold as profit from supermarket where (price_sold - price_purchased) * QTY_sold > 25;
+select * from school where marks >= 80;
+
+select product_name, QTY_Purchased - QTY_Sold as Stock from supermarket where QTY_Purchased - QTY_Sold <25;
+
+PRODUCT_NAME              STOCK
+-------------------- ----------
+Apples                       23
+Melons                       22
+Bananas                      18
+
+-----
+
+create table Consultants(RegNo Number(5),Name char(30),Client char(30),Subject char(30),Marks Number(3));
+insert into consultants values(1,'Jerry','IBM','Java',138);
+insert into consultants values(2,'Jeeves','IBM','Python',123);
+insert into consultants values(3,'John','ONS','Java',141);
+insert into consultants values(4,'Jason','ONS','Pyhton',134);
+
+select name, marks from consultants where client='IBM' and subject='Python';
+select name, marks from consultants where client='ONS' and marks>=125;
+
+update consultants set Name = 'Jack' where RegNo = 1;
+update consultants set Marks = (Marks + 1) where Subject = 'Java';
+
+------
+
+select product_name, (price_sold - price_purchased) * QTY_sold as Profit, 
+price_sold * 15/100 as VAT_Per_Item, QTY_sold,
+(price_sold * 15/100)*QTY_sold as Total_VAT,
+((price_sold - price_purchased) * QTY_sold) - ((price_sold*15/100) * QTY_sold) as NetProfit from supermarket 
+where ((price_sold - price_purchased) * QTY_sold) - ((price_sold*15/100) * QTY_sold) > 15;
+
+select product_name, (price_sold - price_purchased) * QTY_sold as Profit, 
+(price_sold * 15/100)*QTY_sold as Total_VAT, 
+((price_sold - price_purchased) * QTY_sold) - ((price_sold*15/100) * QTY_sold) as NetProfit from supermarket 
+where ((price_sold - price_purchased) * QTY_sold) - ((price_sold*15/100) * QTY_sold) > 15;
+

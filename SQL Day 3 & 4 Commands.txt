@@ -1,0 +1,145 @@
+create table school2(
+RegNo Number(3) Unique,
+Name Char(20),
+Marks Number(3) Check(Marks between 0 and 150));
+
+insert into school2 values(001,'Bert',137);
+insert into school2 values(023,'Ben',129);
+insert into school2 values(031,'Bob',126);
+insert into school2 values(034,'Brian',142);
+insert into school2 values(037,'Brenda',146);
+insert into school2 values(040,'Brandon',129);
+insert into school2 values(043,'Billy',135);
+
+     REGNO NAME                      MARKS
+---------- -------------------- ----------
+         1 Bert                        137
+        23 Ben                         129
+        31 Bob                         126
+        34 Brian                       142
+        37 Brenda                      146
+        40 Brandon                     129
+        43 Billy                       135
+
+
+-------------------------------------------------------------------------------------------------------------
+
+create table Bank(
+AccNo Number(3) Unique Check(AccNo Between 1 and 500),
+Name Char(30) Not Null,
+AccType Char(1) Check (AccType in ('C', 'c', 'S', 's')),
+Amount Number(3) Not Null,
+Transaction Char(1) Check (Transaction in ('W', 'w', 'D', 'd')));
+
+insert into Bank values(1,'Emma','C',100,'D');
+insert into Bank values(2,'Ellen','S',250,'W');
+insert into Bank values(3,'Emily','S',425,'D');
+insert into Bank values(4,'Edward','C', 325,'W');
+
+     ACCNO NAME                           A     AMOUNT T
+---------- ------------------------------ - ---------- -
+         1 Emma                           C        100 D
+         2 Ellen                          S        250 W
+         3 Emily                          S        425 D
+         4 Edward                         C        325 W
+
+--------------------------------------------------------------------------------------------------------
+
+Create Table LibraryMembers(
+ MemberID Number(3) Primary Key,
+ Name char(30));
+
+create table LibraryBooks(
+ BookID Number(3) Primary Key,
+ Title char(30));
+
+create table BookIssue(
+ MId Number(3) References LibraryMembers,
+ BId Number(3) References LibraryBooks,
+ BookIssue Date);
+
+insert into LibraryMembers values(1,'David');
+insert into LibraryMembers values(2,'Daniel');
+insert into LibraryMembers values(3,'Derek');
+
+insert into LibraryBooks values(1,'Learn SQL');
+insert into LibraryBooks values(2,'Python Snakes');
+insert into LibraryBooks values(3,'Java Coffee');
+
+insert into BookIssue values(2,1,SysDate);
+
+--------------------------------------------------------------------------------------------------------
+
+select count(*) as People_In_Department, Department_Id 
+from employees 
+where department_id in (10,20,30,40,50,60,70,80,90,100,110) 
+group by department_id 
+having Count(*) >= 5 
+order by people_in_department desc;
+
+PEOPLE_IN_DEPARTMENT DEPARTMENT_ID
+-------------------- -------------
+                  45            50
+                  34            80
+                   6            30
+                   6           100
+                   5            60
+
+select count(*) as People_In_Job_Role, Department_Id, Job_Id 
+from employees 
+where department_id in (10,20,30,40,50,60,70,80,90,100,110) 
+group by department_id, Job_Id 
+having Count(*) >= 1 
+order by people_in_job_role desc, department_id desc;
+
+PEOPLE_IN_JOB_ROLE DEPARTMENT_ID JOB_ID    
+------------------ ------------- ----------
+                29            80 SA_REP    
+                20            50 SH_CLERK  
+                20            50 ST_CLERK  
+                 5           100 FI_ACCOUNT
+                 5            80 SA_MAN    
+                 5            60 IT_PROG   
+                 5            50 ST_MAN    
+                 5            30 PU_CLERK  
+                 2            90 AD_VP     
+                 1           110 AC_MGR    
+                 1           110 AC_ACCOUNT
+                 1           100 FI_MGR    
+                 1            90 AD_PRES   
+                 1            70 PR_REP    
+                 1            40 HR_REP    
+                 1            30 PU_MAN    
+                 1            20 MK_MAN    
+                 1            20 MK_REP    
+                 1            10 AD_ASST   
+
+select First_Name, Department_Name 
+from departments, employees 
+where departments.department_id = employees.department_id;
+
+FIRST_NAME           DEPARTMENT_NAME               
+-------------------- ------------------------------
+Jennifer             Administration                
+Pat                  Marketing                     
+Michael              Marketing                     
+Sigal                Purchasing   
+...                  ...
+
+select name as Most_Popular_Product 
+from products 
+where PId = (
+	select PId from (
+		select PId, count(*) as Total_Sales 
+		from sales group by PId 
+		order by Total_Sales desc) 
+		where Total_Sales = (
+			select max(Total_Sales) 
+			from (
+				select PId, count(*) as Total_Sales 
+				from sales 
+				group by PId 
+				order by Total_Sales desc)
+			)
+		)
+;
