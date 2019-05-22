@@ -45,5 +45,46 @@ where sales.PId = Products.PId and products.SId = Subcategory.SId and subcategor
 group by category.description order by count(*) desc
 ));
 
+--------------------------------------------------------------------------------------------
+
+create or replace procedure FirstProcedure
+is
+begin
+DBMS_Output.put_line('Hello World!');
+end;
+/
+
+create or replace procedure Addition
+is
+A Number(3);
+B Number(3);
+C Number(3);
+begin
+A:=15;
+B:=20;
+C:=A+B;
+DBMS_Output.put_line('The Result Is...');
+DBMS_Output.put_line(C);
+end;
+/
+
+create or replace procedure Add1(A Number, B Number, C Number)
+is
+Result Number(5);
+begin
+Result := A + B + C;
+DBMS_Output.put_line('Result is ' || Result);
+end;
+/
+
+create or replace procedure AddRecord(ID Number, P Number, Q Number)
+is
+begin
+insert into shop values(ID, P, Q);
+end;
+/
+
+
+
 
 
