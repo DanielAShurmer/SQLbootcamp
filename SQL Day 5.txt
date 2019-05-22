@@ -84,6 +84,50 @@ insert into shop values(ID, P, Q);
 end;
 /
 
+create or replace procedure CreateBankAccount(Name char, Postcode char, ACType char, City char)
+is
+begin
+insert into banknew values(
+(
+select upper(
+substr(
+actype,1,1)
+)
+||upper(substr(city,1,1))||
+Lpad(
+NVL(
+Max(
+Substr(Accno,3,3)
+)+1
+,1)
+,3,'0')
+from banknew where substr(accno,1,1) = upper(substr(actype,1,1))
+)
+,name,city);
+end;
+/
+
+
+create or replace procedure FindEmployeeInfo(EmpID)
+is
+FName char (30);
+LName char (30);
+Sal number(10);
+begin
+select First_Name,Last_Name,Salary into Fname,Lname,sal from employees where employee_ID = EmpID;
+DBMS_Output.put_line(FName||' '||LName||' '||Sal);
+end;
+/
+
+create or replace procedure AddCategory(CatToAdd char)
+is
+NewCID Number(3);
+begin
+select NVL(Max(CID),0)+1 into NewCID from category;
+insert into category values(NewCID, CatToAdd);
+end;
+/
+
 
 
 
