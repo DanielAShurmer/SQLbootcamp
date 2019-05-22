@@ -1,0 +1,38 @@
+
+select name as Most_Popular_Product 
+from products 
+where PId = (
+	select PId from (
+		select PId, count(*) as Total_Sales 
+		from sales group by PId 
+		order by Total_Sales desc) 
+		where Total_Sales = (
+			select max(Total_Sales) 
+			from (
+				select PId, count(*) as Total_Sales 
+				from sales 
+				group by PId 
+				order by Total_Sales desc)
+			)
+		)
+;
+
+select sid,count(*) from (select name,qty,sid from sales,products where sales.pid=products.pid) group by sid;
+
+ select description,count(*) from
+ (select * from sales,products,subcategory where sales.PId = Products.PId and products.SId = Subcategory.SId)
+ group by description;
+
+select description from
+(select description,count(*) as Products_Sold_In_Subcat from
+(select * from sales,products,subcategory where sales.PId = Products.PId and products.SId = Subcategory.SId)
+group by description order by count(*) desc)
+where Products_Sold_In_Subcat =
+(select max(Products_Sold_In_Subcat) from
+(select description,count(*) as Products_Sold_In_Subcat from
+(select * from sales,products,subcategory where sales.PId = Products.PId and products.SId = Subcategory.SId)
+group by description order by count(*) desc)
+);
+
+
+
