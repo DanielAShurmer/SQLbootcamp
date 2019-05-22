@@ -34,5 +34,16 @@ where Products_Sold_In_Subcat =
 group by description order by count(*) desc)
 );
 
+select description from
+(select category.description,count(*) as Products_Sold_In_Cat from sales,products,subcategory,category
+where sales.PId = Products.PId and products.SId = Subcategory.SId and subcategory.CId = category.cid 
+group by category.description order by count(*) desc)
+where products_sold_in_cat = (
+select max(products_sold_in_cat) from (
+select category.description,count(*) as Products_Sold_In_Cat from sales,products,subcategory,category
+where sales.PId = Products.PId and products.SId = Subcategory.SId and subcategory.CId = category.cid 
+group by category.description order by count(*) desc
+));
+
 
 
