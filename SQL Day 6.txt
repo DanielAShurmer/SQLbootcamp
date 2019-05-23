@@ -106,11 +106,75 @@ end;
 
 create or replace trigger Delete_Product
 after delete on products
+                                                 <for each row>
 declare
 begin
 DBMS_Output.put_line('Record Deleted...');
 end;
 /
+
+create table Sales_Backup(
+PID Number(20),
+qty Number(20),
+Price number (20),
+date1 date
+);
+
+create or replace trigger Backup_Deleted_Sale
+before delete on sales
+for each row
+begin
+insert into sales_backup values(:old.pid,:old.qty,:old.price,:old.date1);
+end;
+/
+
+----------------------------------------------------------------------------------------------------------------------
+
+create table Sales_Backup2(
+PID Number(20),
+qty Number(20),
+Price number (20),
+date1 date,
+User_Who_Deleted char(30),
+Deletion_Date date
+);
+
+create or replace trigger Backup_Deleted_Sale
+before delete on sales
+for each row
+begin
+insert into sales_backup2 values(:old.pid,:old.qty,:old.price,:old.date1, user, sysdate);
+end;
+/
+
+create table school(
+RegNo Number(3),
+Name Char(20),
+Marks Number(3));
+
+
+create or replace trigger Insert_Into_School
+before insert on school
+for each row
+begin
+if :new.marks = 58 or :new.marks = 59 then
+:new.marks := 60;
+end if;
+:new.name := upper(:new.name);
+end;
+/
+
+
+insert into school values(1,'arron',58);
+select * from school;
+
+     REGNO NAME                      MARKS
+---------- -------------------- ----------
+         1 ARRON                        60
+
+
+
+
 
 
 
