@@ -1,0 +1,52 @@
+create or replace procedure CreateNewSubCat(Cat char, Sub char)
+is
+NewCId Number(4);
+NewSId Number(4);
+begin
+select nvl(max(cid),0) into NewCId from category where description = cat;
+if NewCId = 0 then
+select nvl(max(cid),0)+1 into NewCId from category;
+insert into category values(NewCId,Cat);
+end if;
+select nvl(max(sid),0)+1 into NewSId from subcategory;
+insert into subcategory values(NewCId,NewSId,sub);
+end;
+/
+
+------------------------------------------------------------------------------------------------------------
+
+create or replace function TimesByTwo(X number)
+return number
+is
+Result Number(3);
+begin
+Result := X * 2;
+Return Result;
+end;
+/
+
+create or replace function Tax(num1 Number)
+return number
+is
+Result Number(10);
+begin
+result := num1 * 21/100;
+return result;
+end;
+/
+
+select First_Name, Salary, Tax(Salary) as TAX, Salary - Tax(Salary) as Salary_Minus_TAX from employees;
+
+FIRST_NAME               SALARY        TAX SALARY_MINUS_TAX
+-------------------- ---------- ---------- ----------------
+Steven                    24000       5040            18960
+Neena                     17000       3570            13430
+Lex                       17000       3570            13430
+Alexander                  9000       1890             7110
+...                         ...        ...              ...
+
+
+select timesbytwo(72) from dual;
+
+
+
