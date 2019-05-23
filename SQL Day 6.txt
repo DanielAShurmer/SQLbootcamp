@@ -48,5 +48,72 @@ Alexander                  9000       1890             7110
 
 select timesbytwo(72) from dual;
 
+----------------------------------------------------------------------------------------------------
+
+create or replace function DynamicTax(Sal number)
+return number
+is
+result number(7,2);
+begin
+if sal <= 499 then
+result := 0;
+end if;
+if sal between 500 and 999 then
+result := Sal * 15/100;
+end if;
+if sal >= 1000 then
+result := Sal * 21/100;
+end if;
+return result;
+end;
+/
+
+create or replace function ShowDepName(d_id number)
+return char
+is
+d_name Departments.department_name%type;
+begin
+select department_name into d_name from departments where department_id = d_id;
+return d_name;
+end;
+/
+
+select First_Name,Last_Name,ShowDepName(department_id),Salary,DynamicTax(Salary) from employees;
+
+---------------------------------------------------------------------------------------------------------
+
+create or replace function CountSubCats(inputCId number)
+return number
+is
+output number(5);
+begin
+select count(*) into output from subcategory where inputCId = CId;
+return output;
+end;
+/
+
+create or replace function countproductsincat(inputCId number)
+return number
+is
+output number (5);
+begin
+select nvl(count(products.PId),0) into output from products,subcategory where subcategory.CId = inputCId and products.SId = Subcategory.SId;
+return output;
+end;
+/
+
+--------------------------------------------------------------------------------------------------------------
+
+create or replace trigger Delete_Product
+after delete on products
+declare
+begin
+DBMS_Output.put_line('Record Deleted...');
+end;
+/
+
+
+
+
 
 
